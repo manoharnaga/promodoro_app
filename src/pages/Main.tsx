@@ -9,11 +9,13 @@ import {ButtonIcon, PageContainer} from '@/shared/components';
 import {Notifications} from '@/shared/lib/notifications';
 import {GITHUB_URL} from '@/shared/utils/constants';
 import * as backgrounds from '@/assets/backgrounds';
+import data from '../assets/songs.json';
 
 const MainPage = () => {
   const [background] = useState(backgrounds.bluebalcony);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const {state, dispatch} = useSettings();
+  const [selectedSongs, setSelectedSongs] = useState<[]>([]);
 
   const completeMode = (modeCompleted: TimerMode) => dispatch('completeMode', {modeCompleted});
   const incrementModeCounter = (mode: TimerMode) => dispatch('incrementModeCounter', {mode});
@@ -29,10 +31,21 @@ const MainPage = () => {
     if (!document.fullscreenElement) document.documentElement.requestFullscreen();
     else if (document.exitFullscreen) document.exitFullscreen();
   };
+
   const openGitHub = () => window.open(GITHUB_URL);
 
   useEffect(() => {
-    Notifications().requestPermission();
+      const storedSongsIds = JSON.parse(localStorage.getItem('selectedSongs') || '[]');
+      console.log("Main.tsx -> all songs",data.songs);
+      console.log("Main.tsx -> selectedSongIds",storedSongsIds);
+      const selectedSongs = data.songs.filter((song) => storedSongsIds.includes(song.id));
+
+      if (selectedSongs.length > 0) {
+        setSelectedSongs(selectedSongs);
+        console.log('Selected Songs:', selectedSongs);
+        changeVideoId(selectedSongs[0].url); 
+      }
+      Notifications().requestPermission();
   }, []);
 
   return (
@@ -53,15 +66,14 @@ const MainPage = () => {
             </div>
 
             <div className="flex justify-end items-center">
-              <ButtonIcon
+              {/* <ButtonIcon
                 onClick={openGitHub}
                 icon={TbBrandGithub}
                 className="ml-4"
                 data-tooltip-id="nav-tooltip"
                 data-tooltip-content="GitHub"
                 data-tooltip-offset={15}
-              />
-
+              /> */}
               <ButtonIcon
                 onClick={toggleFullScreen}
                 icon={TbBorderCorners}
@@ -102,7 +114,7 @@ const MainPage = () => {
         </div>
 
         <div className="fixed bottom-6 w-screen flex justify-center items-center">
-          <Player videoId={state.videoId} onChangeVideoId={changeVideoId} />
+          <Player videoId={state.videoId} onChangeVideoId={changeVideoId} videoQueue={selectedSongs}/>
         </div>
       </PageContainer>
     </>

@@ -1,10 +1,17 @@
 import {SettingsProvider} from '@/contexts/settings';
-import Main from '@/pages/Main';
+import SelectSongs from './pages/SelectSongs';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MainPage from './pages/Main';
 
 const App = () => {
   return (
     <SettingsProvider>
-      <Main />
+      <Router>
+      <Routes>
+        <Route path="/" element={<SelectSongs />} />
+        <Route path="/main" element={<MainPage />} />
+      </Routes>
+    </Router>
     </SettingsProvider>
   );
 };

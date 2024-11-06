@@ -1,4 +1,4 @@
-import {FC} from 'react';
+import {FC, useEffect} from 'react';
 import clsx from 'clsx';
 import YouTubePlayer from 'react-youtube';
 import {useUndoState} from '@/shared/hooks';
@@ -13,14 +13,18 @@ import { useTimer } from '../timer/hooks';
 type Status = 'VIDEO_SHOW' | 'VIDEO_HIDE' | 'VIDEO_SEARCH';
 interface Props {
   videoId: string;
+  videoQueue: any[];
   onChangeVideoId: (videoId: string) => void;
 }
 
-const Player: FC<Props> = ({videoId, onChangeVideoId}) => {
+const Player: FC<Props> = ({videoId, videoQueue, onChangeVideoId}) => {
   const {isReady, title, onPlayerReady, onPlayerEnd} = usePlayer();
   const [status, setStatus, undoStatus] = useUndoState<Status>('VIDEO_HIDE');
-  const [videoQueue, setVideoQueue] = useState<string[]>([videoId]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  useEffect(() => {
+    console.log("Player.tsx -> videoQueue",videoQueue);
+    onChangeVideoId(videoQueue[0].url);
+  });
   // const {timerState, toggle, start, reset} = useTimer({
   //   mode: 'focus',
   //   minutes: 0,
@@ -46,7 +50,6 @@ const Player: FC<Props> = ({videoId, onChangeVideoId}) => {
   };
 
   const submitSearchVideo = (id: string) => {
-    setVideoQueue((prevQueue) => [...prevQueue, id]);
     // setCurrentIndex(videoQueue.length);
     onChangeVideoId(id);
     setStatus('VIDEO_SHOW');
