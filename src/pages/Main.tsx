@@ -10,12 +10,14 @@ import {Notifications} from '@/shared/lib/notifications';
 import {GITHUB_URL} from '@/shared/utils/constants';
 import * as backgrounds from '@/assets/backgrounds';
 import data from '../assets/songs.json';
+import Loader from '@/shared/components/Loader';
 
 const MainPage = () => {
   const [background] = useState(backgrounds.bluebalcony);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const {state, dispatch} = useSettings();
   const [selectedSongs, setSelectedSongs] = useState<[]>([]);
+  const [isSongsLoaded, setIsSongsLoaded] = useState(false); 
 
   const completeMode = (modeCompleted: TimerMode) => dispatch('completeMode', {modeCompleted});
   const incrementModeCounter = (mode: TimerMode) => dispatch('incrementModeCounter', {mode});
@@ -45,8 +47,14 @@ const MainPage = () => {
         console.log('Selected Songs:', selectedSongs);
         changeVideoId(selectedSongs[0].url); 
       }
+
+      setIsSongsLoaded(true);
       Notifications().requestPermission();
   }, []);
+
+  if (!isSongsLoaded) {
+    return <Loader />; // Show loader until songs are loaded
+  }
 
   return (
     <>
