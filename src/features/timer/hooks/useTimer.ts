@@ -41,6 +41,7 @@ const useTimer = (props: Props): UseTimer => {
   }, isTicking);
 
   const start = useCallback(() => {
+    console.log("useTimer.ts -> start");
     setIsTicking(true);
     onStart?.();
   }, [onStart, isTicking]);

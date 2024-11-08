@@ -7,8 +7,6 @@ import Toolbar from './components/Toolbar';
 import {usePlayer} from './hooks/usePlayer';
 import {PLAYER_OPTIONS} from './utils/constants';
 import { useState } from 'react';
-import eventBus from '@/shared/lib/event-bus';
-import { useTimer } from '../timer/hooks';
 
 type Status = 'VIDEO_SHOW' | 'VIDEO_HIDE' | 'VIDEO_SEARCH';
 interface Props {
@@ -18,28 +16,24 @@ interface Props {
 }
 
 const Player: FC<Props> = ({videoId, videoQueue, onChangeVideoId}) => {
-  const {isReady, title, onPlayerReady, onPlayerEnd} = usePlayer();
   const [status, setStatus, undoStatus] = useUndoState<Status>('VIDEO_HIDE');
   const [currentIndex, setCurrentIndex] = useState(0);
-  useEffect(() => {
-    console.log("Player.tsx -> videoQueue",videoQueue);
-    onChangeVideoId(videoQueue[0].url);
+
+  const {isReady, title, onPlayerReady, onPlayerEnd} = usePlayer({
+    currentIndex,
+    setCurrentIndex,
+    videoId,
+    videoQueue,
+    onChangeVideoId,
   });
-  // const {timerState, toggle, start, reset} = useTimer({
-  //   mode: 'focus',
-  //   minutes: 0,
-  //   onPause: () => eventBus.pauseTimer.emit(),
-  //   onStart: () => eventBus.startTimer.emit(),
-  //   onComplete: () => {
-  //     // const message = mode === 'focus' ? POMODORO_MSG.BREAK : POMODORO_MSG.FOCUS;
-  //     // notifications.showNotification(`${message}!`, {icon: IMAGES.NOTIFICATION});
 
-  //     // if (mode === 'focus') sounds.playBreak();
-  //     // else sounds.playFocus();
-
-  //     // completeMode();
-  //   },
-  // });
+  useEffect(() => {
+    if (videoQueue.length > 0 && !videoId) {
+      console.log("Player.tsx -> videoQueue",videoQueue);
+      onChangeVideoId(videoQueue[0].url);
+    }
+  }, []);
+  
 
   const toggleOpenPlayer = () => {
     setStatus((prev) => {
@@ -54,12 +48,6 @@ const Player: FC<Props> = ({videoId, videoQueue, onChangeVideoId}) => {
     onChangeVideoId(id);
     setStatus('VIDEO_SHOW');
   };
-
-  const playFromQueue = (index: number) => {
-    setCurrentIndex(index);
-    onChangeVideoId(videoQueue[index]);
-    // toggle();
-  };
   
 
   return (
@@ -71,6 +59,7 @@ const Player: FC<Props> = ({videoId, videoQueue, onChangeVideoId}) => {
         )}
       >
         <YouTubePlayer
+          key = {videoId}
           videoId={videoId}
           onReady={onPlayerReady}
           onEnd={onPlayerEnd}
@@ -98,21 +87,19 @@ const Player: FC<Props> = ({videoId, videoQueue, onChangeVideoId}) => {
         )}
       </div>
       
-      <div className="flex overflow-x-auto space-x-2 bg-black/75 p-2 rounded-lg w-96 text-white/75 text-xs">
+      {/* <div className="flex overflow-x-auto space-x-2 bg-black/75 p-2 rounded-lg w-96 text-white/75 text-xs">
         {videoQueue.map((id, index) => (
           <button
             key={index}
-            onClick={() => playFromQueue(index)}
             className={clsx(
               'px-2 py-1 rounded transition-all duration-150',
               index === currentIndex ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300',
-              'hover:bg-blue-500 hover:text-white'
             )}
           >
             {`Video ${index + 1}`}
           </button>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

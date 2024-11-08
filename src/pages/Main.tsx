@@ -52,8 +52,12 @@ const MainPage = () => {
       Notifications().requestPermission();
   }, []);
 
+  useEffect(() => {
+    console.log("Main.tsx -> videoId changed",state.videoId);
+  },[state.videoId]);
+
   if (!isSongsLoaded) {
-    return <Loader />; // Show loader until songs are loaded
+    return <Loader />;
   }
 
   return (

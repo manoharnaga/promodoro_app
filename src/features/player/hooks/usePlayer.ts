@@ -3,7 +3,21 @@ import {YouTubeEvent, YouTubePlayer} from 'react-youtube';
 import eventBus from '@/shared/lib/event-bus';
 import {fadeVolume} from '../utils/fadeVolume';
 
-export const usePlayer = () => {
+interface UsePlayerProps {
+  currentIndex: number;
+  setCurrentIndex: (index: number) => void;
+  videoId: string;
+  videoQueue: { url: string }[];
+  onChangeVideoId: (url: string) => void;
+}
+
+export const usePlayer = ({
+    currentIndex,
+    setCurrentIndex,
+    videoId,
+    videoQueue,
+    onChangeVideoId,
+  }: UsePlayerProps) => {
   const [isPlayBeforeLoaded, setIsPlayBeforeLoaded] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [player, setPlayer] = useState<YouTubePlayer>();
@@ -13,13 +27,22 @@ export const usePlayer = () => {
   const setVolume = (value: number) => fadeVolume(player, value);
 
   const onPlayerReady = (event: YouTubeEvent) => {
+    console.log("onPlayerReady",event.target,videoId);
+    
+    if(event.target) {
+      console.log(videoId,event.target.videoTitle);
+      event.target.seekTo(0);
+      event.target.playVideo();
+    }
     setIsReady(true);
     setPlayer(event.target);
   };
 
   const onPlayerEnd = () => {
-    player.seekTo(0);
-    play();
+    const nextIndex = (currentIndex + 1) % videoQueue.length;
+    console.log("nextIndex",nextIndex,"id",videoQueue[nextIndex],player.videoTitle,videoId);
+    setCurrentIndex(nextIndex);
+    onChangeVideoId(videoQueue[nextIndex].url);
   };
 
   const title = useMemo(() => {
