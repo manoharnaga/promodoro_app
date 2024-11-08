@@ -126,7 +126,7 @@ const MainPage = () => {
         </div>
 
         <div className="fixed bottom-6 w-screen flex justify-center items-center">
-          <Player videoId={state.videoId} onChangeVideoId={changeVideoId} videoQueue={selectedSongs}/>
+          <Player mode={state.mode} videoId={state.videoId} onChangeVideoId={changeVideoId} videoQueue={selectedSongs}/>
         </div>
       </PageContainer>
     </>

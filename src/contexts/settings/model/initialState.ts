@@ -12,13 +12,13 @@ export const initialState: State = {
     focus: {
       id: 'focus',
       label: 'Focus',
-      time: 25,
+      time: 1,
       completed: 0,
     },
     short_break: {
       id: 'short_break',
       label: 'Short break',
-      time: 5,
+      time: 1,
       completed: 0,
     },
     long_break: {

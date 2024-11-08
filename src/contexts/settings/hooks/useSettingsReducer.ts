@@ -8,7 +8,8 @@ const KEY = 'settings';
 export const initializer = (initialValue = initialState): State => {
   const item = localStorage.getItem(KEY);
 
-  return item ? JSON.parse(item) : initialValue;
+  return initialValue;
+  // return item ? JSON.parse(item) : initialValue;
 };
 
 export const useSettingsReducer = () => {

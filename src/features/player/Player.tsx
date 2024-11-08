@@ -10,16 +10,18 @@ import { useState } from 'react';
 
 type Status = 'VIDEO_SHOW' | 'VIDEO_HIDE' | 'VIDEO_SEARCH';
 interface Props {
+  mode: string;
   videoId: string;
   videoQueue: any[];
   onChangeVideoId: (videoId: string) => void;
 }
 
-const Player: FC<Props> = ({videoId, videoQueue, onChangeVideoId}) => {
+const Player: FC<Props> = ({mode, videoId, videoQueue, onChangeVideoId}) => {
   const [status, setStatus, undoStatus] = useUndoState<Status>('VIDEO_HIDE');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const {isReady, title, onPlayerReady, onPlayerEnd} = usePlayer({
+    mode,
     currentIndex,
     setCurrentIndex,
     videoId,

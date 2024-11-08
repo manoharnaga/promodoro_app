@@ -4,6 +4,7 @@ import eventBus from '@/shared/lib/event-bus';
 import {fadeVolume} from '../utils/fadeVolume';
 
 interface UsePlayerProps {
+  mode: string;
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
   videoId: string;
@@ -12,6 +13,7 @@ interface UsePlayerProps {
 }
 
 export const usePlayer = ({
+    mode,
     currentIndex,
     setCurrentIndex,
     videoId,
@@ -29,7 +31,7 @@ export const usePlayer = ({
   const onPlayerReady = (event: YouTubeEvent) => {
     console.log("onPlayerReady",event.target,videoId);
     
-    if(event.target) {
+    if(event.target && mode === 'short_break') {
       console.log(videoId,event.target.videoTitle);
       event.target.seekTo(0);
       event.target.playVideo();
@@ -50,28 +52,45 @@ export const usePlayer = ({
   }, [player]);
 
   useEffect(() => {
+    console.log("usePlayer.ts -> mode changed",mode);
+    if(mode==='short_break') {
+      play();
+    }
+    else{
+      pause();
+    }
+  },[mode]);
+
+  useEffect(() => {
     if (isPlayBeforeLoaded) play();
 
     const playCleanUp = eventBus.startTimer.subscribe(() => {
+      // alert("playCleanUp");
       if (!player) setIsPlayBeforeLoaded(true);
-
-      play();
+      console.log("mode dadfskljdfskjladkjladskjl",mode);
+      if(mode==='short_break')  play();
     });
 
     const pauseCleanUp = eventBus.pauseTimer.subscribe(() => {
+      // alert("pauseCleanUp");
       if (!player) setIsPlayBeforeLoaded(false);
-
-      pause();
+      if(mode==='short_break')  pause();
     });
 
     const focusStartCleanUp = eventBus.focusStart.subscribe(() => {
-      play();
-      setVolume(100);
+      // alert("focusStartCleanUp");
+      if(mode==='short_break'){
+        play();
+        setVolume(100);
+      }
     });
 
     const focusEndCleanUp = eventBus.focusEnd.subscribe(async () => {
-      await setVolume(10);
-      pause();
+      // alert("focusEndCleanUp");
+      if(mode==='short_break'){
+        await setVolume(10);
+        pause();
+      }
     });
 
     return () => {
@@ -80,7 +99,7 @@ export const usePlayer = ({
       focusStartCleanUp();
       focusEndCleanUp();
     };
-  }, [player]);
+  }, [player, mode]);
 
   return {
     isReady,
