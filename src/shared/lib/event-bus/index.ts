@@ -12,6 +12,7 @@ const timerEvents: TimerEvents = {
   completeTimerMode: createEventHelper('completeTimerMode'),
   focusStart: createEventHelper('focusStart'),
   focusEnd: createEventHelper('focusEnd'),
+  toggleVolume: createEventHelper('toggleVolume'),
 };
 
 export default timerEvents;

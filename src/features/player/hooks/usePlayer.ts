@@ -2,6 +2,7 @@ import {useEffect, useMemo, useState} from 'react';
 import {YouTubeEvent, YouTubePlayer} from 'react-youtube';
 import eventBus from '@/shared/lib/event-bus';
 import {fadeVolume} from '../utils/fadeVolume';
+import timerEvents from '@/shared/lib/event-bus';
 
 interface UsePlayerProps {
   mode: string;
@@ -23,7 +24,8 @@ export const usePlayer = ({
   const [isPlayBeforeLoaded, setIsPlayBeforeLoaded] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [player, setPlayer] = useState<YouTubePlayer>();
-
+  const [isMuted, setIsMuted] = useState(false);
+  
   const play = () => player?.playVideo();
   const pause = () => player?.pauseVideo();
   const setVolume = (value: number) => fadeVolume(player, value);
@@ -60,6 +62,23 @@ export const usePlayer = ({
       pause();
     }
   },[mode]);
+
+  useEffect(() => {
+    // Listener for volume toggle
+    const toggleVolumeListener = () => {
+      setIsMuted((prevMuted) => {
+        const newVolume = prevMuted ? 100 : 0; // Toggle between 0 and full (100)
+        setVolume(newVolume);
+        return !prevMuted;
+      });
+    };
+
+    const unsubscribe = timerEvents.toggleVolume.subscribe(toggleVolumeListener); // Subscribe to toggleVolume
+
+    return () => {
+      unsubscribe(); // Cleanup on unmount
+    };
+  }, [player]);
 
   useEffect(() => {
     if (isPlayBeforeLoaded) play();

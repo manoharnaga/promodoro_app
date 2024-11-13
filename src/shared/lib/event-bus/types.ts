@@ -4,7 +4,8 @@ export type EventName =
   | 'pauseTimer'
   | 'completeTimerMode'
   | 'focusStart'
-  | 'focusEnd';
+  | 'focusEnd'
+  | 'toggleVolume';
 
 export type EventFunction = (...args: any) => void;
 

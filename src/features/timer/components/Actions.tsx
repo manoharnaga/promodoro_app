@@ -1,11 +1,15 @@
 import {FC} from 'react';
 import {
+  TbVolumeOff,
   TbPlayerPauseFilled,
   TbPlayerPlayFilled,
   TbPlayerSkipForwardFilled,
   TbReload,
   TbSettings,
+  TbVolume,
 } from 'react-icons/tb';
+import timerEvents from '@/shared/lib/event-bus';
+import { useState } from 'react';
 
 interface Props {
   isTicking: boolean;
@@ -22,7 +26,19 @@ const Actions: FC<Props> = ({
   nextTimerMode,
   resetTimerMode,
 }) => {
+  const [isMuted, setIsMuted] = useState(false);
+
+  const toggleVolume = () => {
+    setIsMuted(!isMuted);
+    timerEvents.toggleVolume.emit(); // Emit the toggleVolume event
+  };
+
   const buttons = [
+    {
+      _id: -1,
+      Icon: isMuted ? TbVolumeOff : TbVolume,
+      action: toggleVolume, // mute/unmute
+    },
     {
       _id: 0,
       Icon: isTicking ? TbPlayerPauseFilled : TbPlayerPlayFilled,
