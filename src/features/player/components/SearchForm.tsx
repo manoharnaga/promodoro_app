@@ -37,7 +37,7 @@ const SearchForm: FC<Props> = ({videoId, onSubmit, onCancel}) => {
     try {
       const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(trackName)}&type=track`, {
         headers: {
-          'Authorization': `Bearer ${'BQAN9IrZ6fQSkkUEvK_tDv4JpqS3PRSLNPDDXMlGJgDQYmBBYkE99QV18j6Dt-k7zU5BFRvlaTxPhtDxnNzf1SCjKTy-6A_-OYg25_YJd87nrhmmkHY'}`
+          'Authorization': `Bearer ${'BQB3lPZqyNTAQ3dVtYP4S3xR5FERHUPemT5ohRVY2n1dBoooZ8jDUzmkjArLodIuttbjNF7II1UmqEWRyDBKp5U4HheFzQwqcYNdoNiefMfREYZOt-8'}`
         }
       });
       const data = await response.json();
@@ -103,7 +103,8 @@ const SearchForm: FC<Props> = ({videoId, onSubmit, onCancel}) => {
         const spotifyTrackId = await searchSpotifyTrack(videoTitle);
         const audioFeatures = await fetchSpotifyAudioFeatures(spotifyTrackId);
         const score = scoreSong(audioFeatures);
-        console.log(`The song score is ${score}`);
+        console.log("DATA:::::::\t\t",videoTitle,score);
+        // console.log(`The song score is ${score}`);
         onSubmit(id);
       } else {
         alert('Invalid YouTube URL');

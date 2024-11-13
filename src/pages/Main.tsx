@@ -40,8 +40,10 @@ const MainPage = () => {
       const storedSongsIds = JSON.parse(localStorage.getItem('selectedSongs') || '[]');
       console.log("Main.tsx -> all songs",data.songs);
       console.log("Main.tsx -> selectedSongIds",storedSongsIds);
+      data.songs.sort((a, b) => b.score - a.score);
       const selectedSongs = data.songs.filter((song) => storedSongsIds.includes(song.id));
-
+      
+      console.log("Main.tsx -> selectedSongsttttttt",selectedSongs);
       if (selectedSongs.length > 0) {
         setSelectedSongs(selectedSongs);
         console.log('Selected Songs:', selectedSongs);
