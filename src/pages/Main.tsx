@@ -9,8 +9,10 @@ import {ButtonIcon, PageContainer} from '@/shared/components';
 import {Notifications} from '@/shared/lib/notifications';
 import {GITHUB_URL} from '@/shared/utils/constants';
 import * as backgrounds from '@/assets/backgrounds';
-import data from '../assets/songs.json';
+// import data from '../assets/songs.json';
 import Loader from '@/shared/components/Loader';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const MainPage = () => {
   const [background] = useState(backgrounds.bluebalcony);
@@ -18,6 +20,7 @@ const MainPage = () => {
   const {state, dispatch} = useSettings();
   const [selectedSongs, setSelectedSongs] = useState<[]>([]);
   const [isSongsLoaded, setIsSongsLoaded] = useState(false); 
+  const [songData, setSongData] = useState([]);
 
   const completeMode = (modeCompleted: TimerMode) => dispatch('completeMode', {modeCompleted});
   const incrementModeCounter = (mode: TimerMode) => dispatch('incrementModeCounter', {mode});
@@ -36,23 +39,47 @@ const MainPage = () => {
 
   const openGitHub = () => window.open(GITHUB_URL);
 
-  useEffect(() => {
-      const storedSongsIds = JSON.parse(localStorage.getItem('selectedSongs') || '[]');
-      console.log("Main.tsx -> all songs",data.songs);
-      console.log("Main.tsx -> selectedSongIds",storedSongsIds);
-      data.songs.sort((a, b) => b.score - a.score);
-      const selectedSongs = data.songs.filter((song) => storedSongsIds.includes(song.id));
-      
-      console.log("Main.tsx -> selectedSongsttttttt",selectedSongs);
-      if (selectedSongs.length > 0) {
-        setSelectedSongs(selectedSongs);
-        console.log('Selected Songs:', selectedSongs);
-        changeVideoId(selectedSongs[0].url); 
-      }
+  const location = useLocation();
 
-      setIsSongsLoaded(true);
-      Notifications().requestPermission();
-  }, []);
+  useEffect(() => {
+      const fetchData = async () => {
+        const queryParams = new URLSearchParams(location.search);
+        const filePath = queryParams.get('filePath');
+        console.log("Main.tsx -> query params",filePath);
+
+        if (filePath) {
+          try {
+              const songdata = await axios.get(`../assets/${filePath}`);
+              console.log(songdata.data.songs,"hellllll");
+              setSongData(songdata.data.songs);
+          } catch (error) {
+              console.error("Error loading song data:", error);
+          }
+        } else {
+            console.error("File path not found in query parameters.");
+        }
+        
+        const storedSongsIds = JSON.parse(localStorage.getItem('selectedSongs') || '[]');
+        console.log("Main.tsx -> all songs",songData);
+        console.log("Main.tsx -> selectedSongIds",storedSongsIds);
+        songData.sort((a, b) => b.score - a.score);
+        const selectedSongs = songData.filter((song) => storedSongsIds.includes(song.id));
+        
+        console.log("Main.tsx -> selectedSongsttttttt",selectedSongs);
+        if (selectedSongs.length > 0) {
+          setSelectedSongs(selectedSongs);
+          console.log('Selected Songs:', selectedSongs);
+          changeVideoId(selectedSongs[0].url); 
+        }
+
+        setIsSongsLoaded(true);
+        Notifications().requestPermission();
+      };
+      (async () => {
+        await fetchData();
+    })();
+
+  }, [location.search]);
 
   useEffect(() => {
     console.log("Main.tsx -> videoId changed",state.videoId);

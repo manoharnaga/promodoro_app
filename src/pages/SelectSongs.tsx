@@ -1,18 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import data from '../assets/songs.json';
+import { useLocation, useNavigate } from 'react-router-dom';
+// import data from '../assets/songs.json';
+import axios from 'axios';
 
 const SelectSongs = () => {
     const [songs, setSongs] = useState([]);
     const [selectedSongsCount, setSelectedSongsCount] = useState(0);
     const [selectedSongs, setSelectedSongs] = useState(new Set());
+    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const loadSongs = async (filePath) => {
+        try {
+            const data = await axios.get(/* @vite-ignore */`../assets/${filePath}`);
+            console.log('Data:', data.data);
+            /* @vite-ignore */
+            setSongs(data.data.songs);
+        } catch (error) {
+            console.error("Error loading song data:", error);
+        }
+    };
 
     useEffect(() => {
-        console.log(data.songs);
-        setSongs(data.songs);
-    }, []);
+        const fetchData = async () => {
+            const queryParams = new URLSearchParams(location.search);
+            const filePath = queryParams.get('filePath');
+    
+            if (filePath) {
+                await loadSongs(filePath);
+                setLoading(false);
+            } else {
+                console.error("File path not found in query parameters.");
+            }
+        }
+        (async () => {
+            await fetchData();
+        })();
+    }, [location.search]);
+
 
     const handleSongClick = (songId) => {
         setSelectedSongs((prevSelectedSongs) => {
@@ -32,8 +59,11 @@ const SelectSongs = () => {
     const handleSubmit = () => {
         console.log('Select Songs: -> Selected Songs:', Array.from(selectedSongs));
         localStorage.setItem('selectedSongs', JSON.stringify(Array.from(selectedSongs)));
-        navigate('/main');
+        const queryParams = new URLSearchParams(location.search);
+        const filePath = queryParams.get('filePath');
+        navigate(`/main?filePath=${filePath}`);
     }
+    if(loading)  return <div className="container text-center mt-5">Loading...</div>;
 
     return (
         <div className="mt-10 container bg-white p-4 d-flex flex-column align-items-center justify-content-center min-vh-100 m-auto">
