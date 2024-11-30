@@ -1,0 +1,26 @@
+[
+    {
+      "id": 1,
+      "type": "single-select",
+      "question": "What is your favorite color?",
+      "options": ["Red", "Blue", "Green", "Yellow"]
+    },
+    {
+      "id": 2,
+      "type": "multi-select",
+      "question": "Which programming languages do you know?",
+      "options": ["JavaScript", "Python", "Java", "C++"]
+    },
+    {
+      "id": 3,
+      "type": "scale",
+      "question": "How satisfied are you with our service?",
+      "scaleRange": [0, 21],
+      "labels": {
+        "low": "Unsatisfied",
+        "medium": "Neutral",
+        "high": "Satisfied"
+      }
+    }
+  ]
+  
