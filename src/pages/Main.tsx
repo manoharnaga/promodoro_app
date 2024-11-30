@@ -7,7 +7,6 @@ import {Settings} from '@/features/settings';
 import {Timer} from '@/features/timer';
 import {ButtonIcon, PageContainer} from '@/shared/components';
 import {Notifications} from '@/shared/lib/notifications';
-import {GITHUB_URL} from '@/shared/utils/constants';
 import * as backgrounds from '@/assets/backgrounds';
 // import data from '../assets/songs.json';
 import Loader from '@/shared/components/Loader';
@@ -37,8 +36,6 @@ const MainPage = () => {
     else if (document.exitFullscreen) document.exitFullscreen();
   };
 
-  const openGitHub = () => window.open(GITHUB_URL);
-
   const location = useLocation();
 
   useEffect(() => {
@@ -58,7 +55,16 @@ const MainPage = () => {
         } else {
             console.error("File path not found in query parameters.");
         }
-        
+        Notifications().requestPermission();
+      };
+      (async () => {
+        await fetchData();
+    })();
+
+  }, [location.search]);
+
+  useEffect(() => {
+      if (songData.length > 0) {
         const storedSongsIds = JSON.parse(localStorage.getItem('selectedSongs') || '[]');
         console.log("Main.tsx -> all songs",songData);
         console.log("Main.tsx -> selectedSongIds",storedSongsIds);
@@ -73,13 +79,8 @@ const MainPage = () => {
         }
 
         setIsSongsLoaded(true);
-        Notifications().requestPermission();
-      };
-      (async () => {
-        await fetchData();
-    })();
-
-  }, [location.search]);
+      }
+  }, [songData]);
 
   useEffect(() => {
     console.log("Main.tsx -> videoId changed",state.videoId);
