@@ -40,24 +40,24 @@ const Settings: FC<Props> = ({
           max={90}
         />
         <SliderWithLabel
-          label="Break short"
+          label="Break"
           labelFormatter={labelFormatter}
           value={modes.short_break.time}
           onChange={(v) => onChangeTime('short_break', v)}
           min={1}
           max={90}
         />
-        <SliderWithLabel
+        {/* <SliderWithLabel
           label="Break long"
           labelFormatter={labelFormatter}
           value={modes.long_break.time}
           onChange={(v) => onChangeTime('long_break', v)}
           min={1}
           max={90}
-        />
+        /> */}
       </div>
 
-      <div className="bg-secondary p-2 rounded-lg mt-2">
+      {/* <div className="bg-secondary p-2 rounded-lg mt-2">
         <SliderWithLabel
           label="Long breaks interval"
           value={longBreakInterval}
@@ -65,7 +65,7 @@ const Settings: FC<Props> = ({
           max={9}
           onChange={onChangeLongBreakInterval}
         />
-      </div>
+      </div> */}
 
       <div className="bg-secondary p-2 rounded-lg mt-2 space-y-2">
         <div className="flex items-center space-x-4">

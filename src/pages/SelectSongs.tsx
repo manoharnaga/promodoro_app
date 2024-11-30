@@ -66,10 +66,19 @@ const SelectSongs = () => {
     if(loading)  return <div className="container text-center mt-5">Loading...</div>;
 
     return (
-        <div className="mt-10 container bg-white p-4 d-flex flex-column align-items-center justify-content-center min-vh-100 m-auto">
-            <h1 className="text-center mb-4">Select Songs</h1>
-            <p className="text-center">Total Songs Selected: {selectedSongsCount}</p>
-            
+        <div className="container bg-white min-h-screen  min-w-full flex flex-col items-center justify-center">
+            <h1 
+            className="text-center mb-4 text-2xl w-1/4 py-2 rounded-lg" 
+            style={{ backgroundColor: 'darkorange', color: 'white' }}
+            >Select Songs</h1>
+            <h1 className="text-center mb-4 text-2xl w-1/4 py-2 rounded-lg flex items-center justify-center">
+                <span className="px-5 py-3" style={{ backgroundColor: 'green', color: 'white', borderRadius: '0.375rem' }}>
+                    Total Songs Selected:
+                </span>
+                <span className="px-5 py-4 text-lg font-bold" style={{ backgroundColor: 'darkorange',color: 'white',borderRadius: '0.375rem' }}>
+                    {selectedSongsCount}
+                </span>
+            </h1>
             {/* Scrollable song list */}
             <div className="row overflow-auto w-75 w-md-50 w-lg-25" style={{ maxHeight: '500px' }}>
                 {songs.map((song) => (
@@ -90,7 +99,7 @@ const SelectSongs = () => {
                     </div>
                 ))}
             </div>
-            <button className="btn btn-primary mt-4" onClick={handleSubmit}>Submit</button>
+            <button className="mx-auto mb-4 bg-lime-500 rounded px-4 py-2" onClick={handleSubmit}>Submit</button>
         </div>
     );
 }

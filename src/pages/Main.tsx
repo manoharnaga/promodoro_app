@@ -101,9 +101,9 @@ const MainPage = () => {
               <div className="flex items-center justify-center outline-none  px-3 py-px text-lg  bg-black/75 text-white  rounded-lg">
                 {state.modes.short_break.completed} <TbCoffee className="ml-2" size={22} />
               </div>
-              <div className="flex items-center justify-center outline-none  px-3 py-px text-lg  bg-black/75 text-white  rounded-lg ">
+              {/* <div className="flex items-center justify-center outline-none  px-3 py-px text-lg  bg-black/75 text-white  rounded-lg ">
                 {state.modes.long_break.completed} <TbPlant className="ml-2" size={22} />
-              </div>
+              </div> */}
             </div>
 
             <div className="flex justify-end items-center">

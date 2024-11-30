@@ -1,0 +1,40 @@
+{
+  "songs": [
+    {
+      "id": 1,
+      "name": "Song 1",
+      "url": "RyLlPlpV3Fw",
+      "score": 0
+    },
+    {
+      "id": 2,
+      "name": "Song 2",
+      "url": "oPbrv_1aYrM",
+      "score": 1
+    },
+    {
+      "id": 3,
+      "name": "Song 3",
+      "url": "Hz7wk-5KmAc",
+      "score": 2
+    },
+    {
+      "id": 4,
+      "name": "Song 4",
+      "url": "SYt6Sgx44oU",
+      "score": 3
+    },
+    {
+      "id": 5,
+      "name": "Song 5",
+      "url": "https://www.youtube.com/watch?v=SYt6Sgx44oU",
+      "score": 4
+    },
+    {
+      "id": 6,
+      "name": "Song 6",
+      "url": "https://www.youtube.com/watch?v=3",
+      "score": 5
+    }
+  ]
+}
